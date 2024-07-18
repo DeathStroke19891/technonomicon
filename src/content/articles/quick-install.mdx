@@ -1,0 +1,85 @@
+---
+title: Get started making your technonomicon.
+description: Introducing the technonomicon.
+layout: ../../layouts/Article.astro
+issue_number: 1
+---
+
+# {frontmatter.title}
+
+**Start it up like any other Astro theme.**
+
+```bash
+  npm create astro@latest -- --template technomancy-dev/technonomicon
+  cd ./technomancy
+  npm run dev
+```
+
+After that you can open up `pages/index.astro` where you will see we are using `collections` to get an `issue`. Issues are the basic building blocks of a technonomicon. They can be treated like pages in a textbook or issues of a newspaper, but we will get into that later. For now just open up the file for the issue and glance through it.
+
+**You will notice it is an MDX file that is tying a few things together.**
+
+It might do something simple like pull togther two articles and join them with a title for the issue.
+
+<More>
+  Modify this issue to see changes on the home page.
+
+  ```mdx
+  ---
+  title: Publish amazing content in a unique format.
+  description: An Astro theme for publishing content for humans to read.
+  issue_number: 1
+  layout: "../../layouts/Issue.astro"
+  ---
+
+  import { getEntry } from "astro:content";
+  import Empty from "../../components/Empty.astro"
+  import ArticleTeaser from "../../components/ArticleTeaser.astro";
+  import FancyParagraph from "../../components/Content/FancyParagraph.astro";
+  import TitleLink from "../../components/TitleLink.astro";
+
+  export const technonomicon = await getEntry(
+  "articles",
+  "what-is-the-technonomicon",
+  );
+  export const card_intro = await getEntry(
+    "articles",
+    "introducing-cards",
+  );
+  export const quick_install = await getEntry("articles", "quick-install");
+
+  export const components = {
+  h1: props => <h1 class="col-span-12 text-3xl lg:text-9xl font-display text-center text-balance" {...props} />
+  }
+
+  # {frontmatter.title}
+
+  <ArticleTeaser
+  components={{ h1: props => <TitleLink slug={card_intro.slug} {...props} />}}
+  markdown={card_intro}
+  href={`/articles/${card_intro.slug}`}
+  class="prose prose-xl xl:col-span-8 col-span-12"
+  cta="Read more about why I made this"
+  title={card_intro.data.title}
+  />
+
+  <ArticleTeaser
+  components={{ h1: props => <TitleLink slug={quick_install.slug} {...props} />}}
+  markdown={quick_install}
+  href={`/articles/${quick_install.slug}`}
+  class="lg:col-span-8 xl:col-span-4 lg:sticky top-10 self-start row-span-2 prose-xl col-span-12"
+  cta="Read more about getting started"
+  title={quick_install.data.title}
+  />
+
+  <ArticleTeaser
+  components={{ h1: props => <TitleLink slug={technonomicon.slug} {...props} />}}
+  markdown={technonomicon}
+  href={`/articles/${technonomicon.slug}`}
+  class="prose prose-xl xl:col-span-8 col-span-12"
+  cta="Read more about why I made this"
+  title={technonomicon.data.title}
+  />
+
+  ```
+</More>

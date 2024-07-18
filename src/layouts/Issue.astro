@@ -1,0 +1,14 @@
+---
+interface Props {
+  title: string;
+  frontmatter: any;
+}
+
+const { title, frontmatter } = Astro.props;
+---
+
+<div
+  class="grid grid-cols-12 gap-y-8 lg:gap-4 break-words hyphens-auto xl:gap-16 md:px-10 px-2 text-justify"
+>
+  <slot />
+</div>

@@ -1,0 +1,24 @@
+---
+import holo_components from "./components";
+import Empty from "../../Empty.astro";
+const { markdown, class: className, href, components, cta } = Astro.props;
+const { Content } = await markdown.render();
+---
+
+<div
+  style={`view-transition-name: holo-${markdown.data.title}-card`}
+  data-theme="skeletor"
+  class="shadow-xl not-prose relative rounded p-1 w-full max-w-md holographic aspect-[63/88]"
+>
+  <div
+    class="p-6 h-full z-10 flex flex-col justify-between bg-gradient-to-br from-base-200 from-30% to-95% via-base-100 to-base-300 bg-300% animate-gradient"
+  >
+    <Content
+      components={{
+        ...components,
+        ...holo_components,
+        More: Empty,
+      }}
+    />
+  </div>
+</div>
