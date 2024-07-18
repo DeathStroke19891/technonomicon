@@ -2,7 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import { getEntry } from "astro:content";
 
-const entry = await getEntry("issues", "introduction-to-the-technonomicon");
+const entry = await getEntry("issues", "lightweaver-technonomicon");
 
 const issueSlug = `/issues/${entry.slug}`;
 const { Content, headings } = await entry.render();

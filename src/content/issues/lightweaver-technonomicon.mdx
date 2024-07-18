@@ -1,0 +1,32 @@
+---
+title: Welcome to the first issue of the lightweaver's technonomicon
+description: A introduction to my blog-letter
+issue_number: 1
+layout: "../../layouts/Issue.astro"
+---
+
+import { getEntry } from "astro:content";
+import Empty from "../../components/Empty.astro"
+import ArticleTeaser from "../../components/ArticleTeaser.astro";
+import FancyParagraph from "../../components/Content/FancyParagraph.astro";
+import TitleLink from "../../components/TitleLink.astro";
+
+export const blog_letter_intro = await getEntry(
+  "articles",
+  "what-is-this-blog-letter",
+);
+
+export const components = {
+  h1: props => <h1 class="col-span-12 text-3xl lg:text-8xl font-display text-center text-balance" {...props} />
+}
+
+# {frontmatter.title}
+
+<ArticleTeaser
+  components={{ h1: props => <TitleLink slug={blog_letter_intro.slug} {...props} />}}
+  markdown={blog_letter_intro}
+  href={`/articles/${blog_letter_intro.slug}`}
+  class="xl:col-span-10 col-span-12"
+  cta="Read more about why I made this"
+  title={blog_letter_intro.data.title}
+/>
