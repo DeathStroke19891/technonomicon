@@ -32,7 +32,7 @@ jobs:
           WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
         run: |
           SIGNATURE=$(echo -n '{}' | openssl dgst -sha1 -hmac $WEBHOOK_SECRET | sed 's/^.* //')
-          curl -X POST http://sridharkedlaya.xyz/api/ci-blog \
+          curl -X POST https://sridharkedlaya.xyz/api/ci-blog \
             -H "Content-Type: application/json" \
             -H "X-Hub-Signature: sha1=$SIGNATURE" \
             -d '{"ref":"refs/heads/main"}'
