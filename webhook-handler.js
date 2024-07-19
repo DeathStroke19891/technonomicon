@@ -22,7 +22,7 @@ function verifySignature(req, res, buf, encoding) {
   }
 }
 
-app.post("api/ci-blog", express.json({ verify: verifySignature }), (req, res) => {
+app.post("/", express.json({ verify: verifySignature }), (req, res) => {
   const payload = req.body;
 
   if (payload.ref === "refs/heads/main") {
