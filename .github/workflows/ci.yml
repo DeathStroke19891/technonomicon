@@ -4,7 +4,9 @@ on:
   push:
     branches:
       - main
-
+  pull_request:
+    branches:
+      - main
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,9 +27,12 @@ jobs:
         run: npm run build
 
       - name: Notify webhook on success
-        if: success() # Only run this step if the previous steps were successful
+        if: success() 
+        env:
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
         run: |
-          curl -X POST https://sridharkedlaya.xyz/api/ci-blog \
-          -H "Content-Type: application/json" \
-          -H "X-Hub-Signature: sha1=$(echo -n '{} | openssl dgst -sha1 -hmac ${{ secrets.WEBHOOK_SECRET }} | sed 's/^.* //')" \
-          -d '{"ref":"refs/heads/main"}'
+          SIGNATURE=$(echo -n '{}' | openssl dgst -sha1 -hmac $WEBHOOK_SECRET | sed 's/^.* //')
+          curl -X POST http://your-server.com/webhook \
+            -H "Content-Type: application/json" \
+            -H "X-Hub-Signature: sha1=$SIGNATURE" \
+            -d '{"ref":"refs/heads/main"}'
