@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Notify webhook on success
+        if: success() # Only run this step if the previous steps were successful
+        run: |
+          curl -X POST https://sridharkedlaya.xyz/api/ci-blog \
+          -H "Content-Type: application/json" \
+          -H "X-Hub-Signature: sha1=$(echo -n '{} | openssl dgst -sha1 -hmac ${{ secrets.WEBHOOK_SECRET }} | sed 's/^.* //')" \
+          -d '{"ref":"refs/heads/main"}'
