@@ -1,0 +1,70 @@
+---
+title: "Where? Why? What? How? and When?: Difference Arrays"
+description: An Introduction to Difference Arrays.
+layout: ../../layouts/Article.astro
+issue_number: 2
+---
+
+# {frontmatter.title}
+
+## Where?
+
+Given Q ranges of the form [L<sub>i</sub>,R<sub>i</sub>], for for each point x ∈ [1,N], find the number of ranges that contain that point.
+
+## Why?
+
+A brute force solution would be to loop over each element for each range but this takes O(NQ) time. We can do better.
+
+> A BIT/Fenwick Tree can also be used to solve this problem with its own tradeoffs
+
+## What?
+
+Difference array is a technique used to perform range update queries is O(1), with an final overhead of O(N) to obtain the final result.
+
+<More>
+A difference array can be used to perform multiple range update where we need to find the answer only after performing all the queries. We can do this in O(N) time and space.
+We can update an arbitary range in O(1). It is only when we need the final result that we perform an O(N) computation.
+
+## How?
+
+We make a new array diff of size N+2 which is initially filled with zeros.
+
+Now for each query, instead of iterating over each element of our array and adding the values, we can simply add the update value to index L of our diff array and subtract it from the index R+1 of out diff array.
+We need a array of size N+2 because we subtract the update value from R+1. It is possible for R to be equal to N.
+
+Finally, we will run a loop from 2 to N (size of the array) and add diff<sub>i-1</sub> to diff<sub>i</sub>.
+
+``` c++
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main() {
+
+	int n = 5; // Size of array
+	vector<int> nums{0, 1, 1, 1, 1, 1}; // 1 based indexing
+        // n+2 because we need are not using the 0-th index and we need one more element in the array.
+	vector<int> diff(n + 2, 0);
+
+	int updateValue = 10;
+	int l = 2, r = 5;
+	diff[l] += updateValue;
+	diff[r + 1] -= updateValue;
+
+	for (int i = 1; i <= n; i++) {
+		diff[i] += diff[i - 1];
+		nums[i] += diff[i];
+	}
+	for (int i = 1; i <= n; i++) cout << nums[i] << " ";
+	return 0;
+}
+```
+
+We can also perform range increment queries this way. It is not necessary for us to add a fixed value of 1 to a range. It can be any arbitary value.
+
+## When?
+
+I came across this when solving Codeforces Round 966 (Div 3) E - Photoshoot for Gorillas where i need the number times a particular subgrid of size kxk would visit each cell of the grid.
+For this senario, a difference array can be used to solve it in O(n*m) time.
+
+</More>

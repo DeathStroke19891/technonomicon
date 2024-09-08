@@ -1,0 +1,75 @@
+---
+title: "Where? Why? What? How? and When?: Sparse Tables"
+description: An Introduction to Sparse Tables.
+layout: ../../layouts/Article.astro
+issue_number: 2
+---
+
+# {frontmatter.title}
+
+## Where?
+
+Given an array of length N, answer Q queries of the form [L<sub>i</sub>, R<sub>i</sub>].
+For each query q, find the value of f(L<sub>i</sub>,L<sub>i</sub>+1,...,R<sub>i</sub>).
+The function f can vary according to the problem, e.g. min(..), sum(...).
+
+## Why?
+
+The bruteforce appoarch would be to loop over all the element from L<sub>i</sub> to R<sub>i</sub> and apply the function f on them.
+This approach would have a time complexity of O(N*Q). This is horrible for all practical reasons.
+
+To solve this we have several ways
+1. Segment tree(O(Q*log _n_) time and O(n) space)
+2. Sparse Table(O(Q) time and O(nlog _n_) space with O(nlog _n_) preprocessing time)
+3. Disjoint Sparse Table
+4. Sqrt trees and Sqrt decomposition
+
+Both Segment trees and Sqrt trees are overkill for this problem unless there are very tight time constraints. Hence for range queries on immutable arrays, sparse tables are generally used.
+
+## What?
+
+<More>
+Sparse Table is a data structure, that allows answering range queries.
+It can answer most range queries in O(log n), but its true power is answering range minimum queries (or equivalent range maximum queries).
+For those queries it can compute answer in O(1) time.
+
+The only drawback of this data structure is, that it can only be used on immutable arrays. This means, that the array cannot be changed between two queries.
+If any element changes, the complete data structure has to be recomputed
+
+Sparse tables can compute answers for range queries involving idempotent functions in O(1), and associative functions in O(log _n_).
+
+Disjoint Sparse Table and Sqrt Trees overcome this problem and solve for even associative functions in O(1).
+
+## How?
+
+The intuition behind sparse tables is the fact that intervals can be represented as the union of smaller intervals of size 2<sup>i</sup>.
+For example [2,15] = [2,9]<sub>(size 8)</sub> ∪ [10, 13]<sub>(size 4)</sub> ∪ [14, 15]<sub>(size 2)</sub>.
+
+### Preprocessing
+
+We will use a 2-dimensional array for storing the answers to the pre computed queries in a table st[i][j] where an entry st<sub>i,j</sub> represents the answer for the interval [j,j+2<sup>i</sup>-1].
+We use dynammic programming to compute the table in O(nlog _n_) time.
+``` c++
+std::copy(array.begin(), array.end(), st[0]);
+
+for (int i = 1; i <= K; i++)
+    for (int j = 0; j + (1 << i) <= N; j++)
+        st[i][j] = f(st[i - 1][j], st[i - 1][j + (1 << (i - 1))]);
+
+```
+
+### Range Queries
+
+For each query q, we can process the query in O(log _n_) time for associative functions and O(1) for idempotent functions.
+For associative functions split the given interval into smaller subintervals of size according to decreasing powers of 2 and answer them.
+
+But the sparse tables really shine with their use for idempotent functions where, overlapping sub-intervals of size i do not make a difference.
+``` c++
+int i = lg[R - L + 1];
+int minimum = min(st[i][L], st[i][R - (1 << i) + 1]);
+```
+
+## When?
+
+For no particular reason I was reading about sparse tables on [here](https://cp-algorithms.com).
+</More>

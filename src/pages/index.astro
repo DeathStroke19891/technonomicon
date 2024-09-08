@@ -1,8 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { getEntry } from "astro:content";
+import { getCollection } from "astro:content";
 
-const entry = await getEntry("issues", "lightweaver-technonomicon");
+const entries = await getCollection("issues")
+const entry = entries.sort().reverse()[0]
 
 const issueSlug = `/issues/${entry.slug}`;
 const { Content, headings } = await entry.render();
