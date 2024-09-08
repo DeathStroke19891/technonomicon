@@ -1,0 +1,166 @@
+---
+title: "Where? Why? What? How? and When?: Fenwick Trees"
+description: An Introduction to Fenwick Trees.
+layout: ../../layouts/Article.astro
+issue_number: 2
+---
+
+# {frontmatter.title}
+
+## Where?
+
+Given an array `A` and `Q` queries of two types:
+1. [_i_, x]  where the update `A[i]=x` has to be performed.
+2. [L<sub>i</sub>,R<sub>i</sub>] where the f(L<sub>i</sub>,...,R<sub>i</sub>) is to be performed.
+
+when the value of f(L<sub>i</sub>,...,R<sub>i</sub>) = f(0,...,R<sub>i</sub>) - f(0,...,L<sub>i</sub>-1)
+
+## Why?
+
+A brute force solution would be to loop over each element for each query but this takes O(NQ) time.
+
+Sparse Tables cannot be used as they work only no immutable arrays and cannot handle point and range updates.
+This problem can be solved by using
+
+1. Fenwick or Binary Indexed Trees
+
+   Complexity of O(log N) but not efficient for range updates and only support for prefix sum style queries
+
+2. Seqment Trees
+
+   Complexity of O(log N), efficient for range updates and other types of queries but with a higher space complexity of O(4*N)
+
+<More>
+3. Sqrt Decomposition and Sqrt Trees
+
+   Better universality and easier implementation and debugging complexity at the cost of O(√N) time complexity
+
+## What?
+
+The Fenwick tree is a data structure which:
++ Calculates the value of function f in the given range [L<sub>i</sub>,R<sub>i</sub>] in O(log N) time
++ Updates the value of an element of `A` in O(log N) time
++ Requires O(N) memory (the same amount required for `A`)
++ Is easy to use and code, especially in the case of multidimensional arrays
+
+All queries are decomposed into prefix sum style queries which are then subtracted to obtain the desired result.
+
+
+Fenwick trees can also be modified to handle range_update-point_query and range_update-range_query also.
+
+## How?
+
+Suppose we are given an array of integers, A[0,...,N-1].
+A Fenwick tree is just an array, T[0,...,N-1], where each element is equal to the sum of elements of A in some range, [g(i), i] where g is some function that satisfies 0≤g(i)≤i.
+
+Below is some pseudo code for the two operations sum and increase. Below, we get the sum of elements of A in the range [0, r] and update (increase) some element A<sub>i</sub>:
+
+```c++
+def sum(int r):
+    res = 0
+    while (r >= 0):
+        res += t[r]
+        r = g(r) - 1
+    return res
+
+def increase(int i, int delta):
+    for all j with g(j) <= i <= j:
+        t[j] += delta
+```
+
+
+The complexity of both sum and increase depend on the function g.
+There are many ways to choose the function g such that 0≤g(i)≤i for all i.
+For instance, the function g(i) = i works, which yields T = A (in which case, the summation queries are slow).
+We could also take the function g(i) = 0. This would correspond to prefix sum arrays (in which case, finding the sum of the range [0, i] will only take constant time; however, updates are slow).
+The clever part of the algorithm for Fenwick trees is how it uses a special definition of the function g which can handle both operations in O(log N) time.
+
+
+The Implemenation of a Fenwick Tree is as below, where g(i) = r & r + 1 and h(i) = idx | (idx + 1) where h(i) recursivly gives all j such that g(j) ≤ i ≤ j.
+
+```c++
+struct FenwickTree {
+    vector<int> bit;  // binary indexed tree
+    int n;
+
+    FenwickTree(int n) {
+        this->n = n;
+        bit.assign(n, 0);
+    }
+
+    FenwickTree(vector<int> const &a) : FenwickTree(a.size()){
+        for (int i = 0; i < n; i++) {
+            bit[i] += a[i];
+            int r = i | (i + 1);
+            if (r < n) bit[r] += bit[i];
+        }
+    }
+
+    // O(n lg n) Implementation
+    // FenwickTree(vector<int> const &a) : FenwickTree(a.size()) {
+    //     for (size_t i = 0; i < a.size(); i++)
+    //         add(i, a[i]);
+    // }
+
+    int sum(int r) {
+        int ret = 0;
+        for (; r >= 0; r = (r & (r + 1)) - 1)
+            ret += bit[r];
+        return ret;
+    }
+
+    int sum(int l, int r) {
+        return sum(r) - sum(l - 1);
+    }
+
+    void add(int idx, int delta) {
+        for (; idx < n; idx = idx | (idx + 1))
+            bit[idx] += delta;
+    }
+};
+```
+
+With one based indexing, the operations sum and add change accordingly
+
+```c++
+struct FenwickTreeOneBasedIndexing {
+    vector<int> bit;  // binary indexed tree
+    int n;
+
+    FenwickTreeOneBasedIndexing(int n) {
+        this->n = n + 1;
+        bit.assign(n + 1, 0);
+    }
+
+    FenwickTreeOneBasedIndexing(vector<int> a)
+        : FenwickTreeOneBasedIndexing(a.size()) {
+        for (size_t i = 0; i < a.size(); i++)
+            add(i, a[i]);
+    }
+
+    int sum(int r) {
+        int ret = 0;
+        for (++r; r > 0; r -= r & -r)
+            ret += bit[r];
+        return ret;
+    }
+
+    int sum(int l, int r) {
+        return sum(r) - sum(l - 1);
+    }
+
+    void add(int idx, int delta) {
+        for (++idx; idx < n; idx += idx & -idx)
+            bit[idx] += delta;
+    }
+};
+```
+
+The main benefit of using this approach is the fact the operations for g(i) and h(i) complement each other nicely.
+
+## When?
+
+I came across this when reading the editorial of Educational Codeforces Round 168 - Level Up where I saw one crazy long editorial using segment trees, BIT or ordered set from pbds.
+I gave up and decided to atleast understand what these data structures mean.
+
+</More>

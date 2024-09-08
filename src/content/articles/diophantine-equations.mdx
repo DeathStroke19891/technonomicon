@@ -1,0 +1,51 @@
+---
+title: "Digits Gone Wild: Diophantine Equations"
+description: An Introduction to Diophantine Equations.
+layout: ../../layouts/Article.astro
+issue_number: 2
+---
+
+# {frontmatter.title}
+
+So Diophantine Equations...
+
+My first encounter with Diophantine Equations was probably in my first year during Cirquit recruitment test.
+I was asked to solve a problem and having forgotten how to do modular arithmetic and find GCDs (Thank you JEE), sat and derived some crazy complicated equations to solve the problem.
+Right after that I had a Coding Club interview where I was asked to find the GCD of two numbers. Hmmm..., I just did this, let me do it again I thought.
+Shivam Birajdhar who was my interviewer told, hmmm... you are solving a diophantine equation and I was like "What??"
+<More>
+
+Diophantus of Alexandria, who wrote _Arithmatica_, which had a lot of equations involving solutions which need to be positive integers. Since then these classes of equations have been known as Diophantine equations.
+Some diophantine equations can only be solved using p-adic numbers, which is probably the craziest concept I know till now on its own.
+
+A Diophantine equation is an equation relating integer (or sometimes natural number or whole number) quanitites.
+Finding the solution or solutions to a Diophantine equation is closely tied to modular arithmetic and number theory.
+Often, when a Diophantine equation has infinitely many solutions, parametric form is used to express the relation between the variables of the equation.
+
+A Linear Diophantine equation in two variables takes the form of _ax + by = c_, where x, y ∈ ℤ and a,b,c are integer constants, x and y are unknown variables.
+There can possibly exist infinite solutions for some linear diophantine equations in 2 variables and can be solved through a variation of Bézout's identity.
+Linear Diophantine Equations in 3 or more variables also make use of Bézout's identity extensively to find solutions.
+
+The most famous of the non linear Diophantine equations are the pythagorean triplets where equations of the form x<sup>2</sup> + y<sup>2</sup> = z<sup>2</sup>.
+A general form of this is what makes up Fermat's Last Theorem which was solved by Andrew Wiles using symmetries in the algebraic geometry of elliptic curves.
+
+The focus of this article is on solving a particular type of Diophantine equations using Simon's Factoring Trick where given equations of the type
+ab + 2a + 3b = n can be solved quite easily using some clever algebraic manipulation.
+
+The solution/method is as follows:
+
+```
+ab + 2a + 3b = n
+
+a(b + 2) + 3b = n
+
+a(b + 2) + 3b + 6 - 6= n
+
+a(b + 2) + 3(b + 2) = n + 6
+
+(b + 2)(a + 3) = n + 6
+```
+
+Now since both a and b are integers, b + 2 and a + 3 have to be intergers and have to be factors of n+6.
+
+</More>

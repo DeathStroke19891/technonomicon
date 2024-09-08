@@ -1,0 +1,89 @@
+---
+title: Placement Season
+description: Caveats, Tips, Tricks and Anxiety
+issue_number: 2
+layout: "../../layouts/Issue.astro"
+---
+
+import { getEntry } from "astro:content";
+import Empty from "../../components/Empty.astro"
+import ArticleTeaser from "../../components/ArticleTeaser.astro";
+import FancyParagraph from "../../components/Content/FancyParagraph.astro";
+import TitleLink from "../../components/TitleLink.astro";
+
+export const sparse = await getEntry(
+  "articles",
+  "sparse-table",
+);
+
+export const fenwick = await getEntry(
+  "articles",
+  "fenwick-trees",
+);
+
+export const difference = await getEntry(
+  "articles",
+  "difference-arrays",
+);
+
+export const numbers = await getEntry(
+  "articles",
+  "diophantine-equations",
+);
+
+export const placement = await getEntry(
+  "articles",
+  "placement-anxiety",
+);
+
+export const components = {
+  h1: props => <h1 class="col-span-12 text-3xl lg:text-8xl font-display text-center text-balance" {...props} />
+}
+
+# {frontmatter.title}
+
+
+<ArticleTeaser
+  components={{ h1: props => <TitleLink slug={placement.slug} {...props} />}}
+  markdown={placement}
+  href={`/articles/${placement.slug}`}
+  class="xl:col-span-8 col-span-12"
+  cta="Read more about my experiences in the placement drive and everything else"
+  title={placement.data.title}
+/>
+
+<ArticleTeaser
+  components={{ h1: props => <TitleLink slug={numbers.slug} {...props} />}}
+  markdown={numbers}
+  href={`/articles/${numbers.slug}`}
+  class="lg:col-span-8 xl:col-span-4 xl:sticky top-10 self-start row-span-2 prose-xl col-span-12"
+  cta="Learn more about Diophantine Equations in the Number Theory column"
+  title={numbers.data.title}
+/>
+
+<ArticleTeaser
+  components={{ h1: props => <TitleLink slug={sparse.slug} {...props} />}}
+  markdown={sparse}
+  href={`/articles/${sparse.slug}`}
+  class="xl:col-span-8 col-span-12"
+  cta="Learn more about Sparse Tables"
+  title={sparse.data.title}
+/>
+
+<ArticleTeaser
+  components={{ h1: props => <TitleLink slug={difference.slug} {...props} />}}
+  markdown={difference}
+  href={`/articles/${difference.slug}`}
+  class="xl:col-span-8 col-span-12"
+  cta="Learn more about Difference Arrays"
+  title={difference.data.title}
+/>
+
+<ArticleTeaser
+  components={{ h1: props => <TitleLink slug={fenwick.slug} {...props} />}}
+  markdown={fenwick}
+  href={`/articles/${fenwick.slug}`}
+  class="xl:col-span-8 col-span-12"
+  cta="Learn more about Fenwick Trees"
+  title={fenwick.data.title}
+/>
