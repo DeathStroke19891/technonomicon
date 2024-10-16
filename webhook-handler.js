@@ -28,7 +28,7 @@ app.post("/", express.json({ verify: verifySignature }), (req, res) => {
   if (payload.ref === "refs/heads/main") {
     const projectRoot = path.resolve(__dirname, "..");
     exec(
-      `cd ${projectRoot} && git pull && npm install && npm run build && npm run start`,
+      `cd ${projectRoot} && git pull && npm install && pm2 restart blog`,
       (error, stdout, stderr) => {
         if (error) {
           console.error(`exec error: ${error}`);
