@@ -1,0 +1,75 @@
+---
+title: The fallen leaves tell a story
+description: Memory, Sorrow and Liberation
+issue_number: 3
+layout: "../../layouts/Issue.astro"
+---
+
+import { getEntry } from "astro:content";
+import Empty from "../../components/Empty.astro"
+import ArticleTeaser from "../../components/ArticleTeaser.astro";
+import FancyParagraph from "../../components/Content/FancyParagraph.astro";
+import TitleLink from "../../components/TitleLink.astro";
+
+export const tobeornottobe = await getEntry(
+  "articles",
+  "sql-nosql",
+);
+
+export const numbers = await getEntry(
+  "articles",
+  "sieve",
+);
+
+export const awhoo = await getEntry(
+  "articles",
+  "getting-placed",
+);
+
+export const utopia = await getEntry(
+  "articles",
+  "utopia",
+);
+
+export const components = {
+  h1: props => <h1 class="col-span-12 text-3xl lg:text-8xl font-display text-center text-balance" {...props} />
+}
+
+# {frontmatter.title}
+
+<ArticleTeaser
+  components={{ h1: props => <TitleLink slug={awhoo.slug} {...props} />}}
+  markdown={awhoo}
+  href={`/articles/${awhoo.slug}`}
+  class="xl:col-span-7 col-span-12"
+  cta="Learn about my interview experience and regrets"
+  title={awhoo.data.title}
+/>
+
+<ArticleTeaser
+  components={{ h1: props => <TitleLink slug={numbers.slug} {...props} />}}
+  markdown={numbers}
+  href={`/articles/${numbers.slug}`}
+  class="lg:col-span-8 xl:col-span-5 xl:sticky top-10 self-start row-span-8 prose-xl col-span-12"
+  cta="Learn more about Sieves in the Number Theory column"
+  title={numbers.data.title}
+/>
+
+<ArticleTeaser
+  components={{ h1: props => <TitleLink slug={utopia.slug} {...props} />}}
+  markdown={utopia}
+  href={`/articles/${utopia.slug}`}
+  class="xl:col-span-7 col-span-12"
+  cta="Read more on Utopia and what it was meant to be"
+  title={utopia.data.title}
+/>
+
+<ArticleTeaser
+  components={{ h1: props => <TitleLink slug={tobeornottobe.slug} {...props} />}}
+  markdown={tobeornottobe}
+  href={`/articles/${tobeornottobe.slug}`}
+  class="xl:col-span-7 col-span-12"
+  cta="Learn about the different SQL and NoSQL Databases"
+  title={tobeornottobe.data.title}
+/>
+

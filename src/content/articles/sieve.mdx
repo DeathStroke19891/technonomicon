@@ -1,0 +1,155 @@
+---
+title: "Digits Gone Wild: Sieves"
+description: A Primer on Sieves.
+layout: ../../layouts/Article.astro
+issue_number: 3
+---
+
+# {frontmatter.title}
+
+Blazingly fast ways to find all primes within a range.
+
+## Sieve of Erastosthenes
+
+Sieve of Erastosthenes is an algorithm for finding all the prime numbers in a segment \[1,n]  using O(_n_ log log _n_) operations. Just your basic sieve, can probably find an explanation elsewhere.
+
+### Sieving till root
+
+Optimisation of Sieve of Erastosthenes, by optimising it until the root of max N. 
+
+```c++
+int n;
+vector<bool> is_prime(n+1, true);
+is_prime[0] = is_prime[1] = false;
+for (int i = 2; i * i <= n; i++) {
+    if (is_prime[i]) {
+        for (int j = i * i; j <= n; j += i)
+            is_prime[j] = false;
+    }
+}
+```
+Can be further optimised by i incrementing by 2 and making sure that only odd numbers are considered.
+
+<More>
+
+## Segmented Sieve
+
++ Optimised for cache stores in memory.
++ Sieved normally until sqrt(n)
++ Then use blocks of fixed size to find the rest of the primes
++ Is efficient only if n is very large and S is of the order 10<sup>5</sup>
+
+```c++
+int count_primes(int n) {
+    const int S = 10000;
+
+    // Sieve until sqrt(n)
+    vector<int> primes;
+    int nsqrt = sqrt(n);
+    vector<char> is_prime(nsqrt + 2, true);
+    for (int i = 2; i <= nsqrt; i++) {
+        if (is_prime[i]) {
+            primes.push_back(i);
+            for (int j = i * i; j <= nsqrt; j += i)
+                is_prime[j] = false;
+        }
+    }
+
+
+    // Find the rest of the primes by dividing the whole range in blocks of size S, which is then sieved again.
+    // Lower amount of memory required and optimised as a block is extracted at once and cache misses are less.
+    int result = 0;
+    vector<char> block(S);
+    for (int k = 0; k * S <= n; k++) {
+        fill(block.begin(), block.end(), true);
+        int start = k * S;
+        for (int p : primes) {
+            int start_idx = (start + p - 1) / p;
+            int j = max(start_idx, p) * p - start;
+            for (; j < S; j += p)
+                block[j] = false;
+        }
+        if (k == 0)
+            block[0] = block[1] = false;
+        for (int i = 0; i < S && start + i <= n; i++) {
+            if (block[i])
+                result++;
+        }
+    }
+    return result;
+}
+```
+
+## Find prime numbers in a range \[L,R]
+
+Same as segmented sieve partially. Sieve untill sqrt(R), and then find all primes in the range \[L,R]
+
+```c++
+vector<char> segmentedSieve(long long L, long long R) {
+    // generate all primes up to sqrt(R)
+    long long lim = sqrt(R);
+    vector<char> mark(lim + 1, false);
+    vector<long long> primes;
+    for (long long i = 2; i <= lim; ++i) {
+        if (!mark[i]) {
+            primes.emplace_back(i);
+            for (long long j = i * i; j <= lim; j += i)
+                mark[j] = true;
+        }
+    }
+
+    // Find primes in range [L,R]
+    // start = L; S = R
+    vector<char> isPrime(R - L + 1, true);
+    for (long long i : primes)
+        for (long long j = max(i * i, (L + i - 1) / i * i); j <= R; j += i)
+            isPrime[j - L] = false;
+    if (L == 1)
+        isPrime[0] = false;
+    return isPrime;
+}
+```
+
+## Linear Sieve
+
+Generally slower than segmented sieve as it has a large constant factor. 
+
+But Linear Sieve is the honoured one.
+Seemingly impossible algorithm, with a concise implementation.
+Each number is visited only once and also gives the factorisation of the number in linear time.
+
+```c++
+const int N = 10000000;
+vector<int> lp(N+1);
+vector<int> pr;
+
+for (int i=2; i <= N; ++i) {
+    if (lp[i] == 0) {
+        lp[i] = i;
+        pr.push_back(i);
+    }
+    for (int j = 0; i * pr[j] <= N; ++j) {
+        lp[i * pr[j]] = pr[j];
+        if (pr[j] == lp[i]) {
+            break;
+        }
+    }
+}
+```
+
+The proof for this beautiful algorithm is a bit tricky and needs some thought. 
+I will probably never be able to explain it in all its glory but at least I can try.
+
+```
+For a given number i, we find i*pr[j] for all pr[j] <= lp[i].
+This fills the lp vector for all numbers which are multiples of i and have a prime factor <= lp[i].
+The factorisation of a number i*pr[j] will be lp[i]*k*pr[j] where pr[j] <= lp[i] <= k.
+Hence each number is set exactly once as there can only be one unique factorisation with lp of that number.
+One more thing to be noted here is that you always set numbers which are greater than i, so repeatitions are not possible.
+```
+
+This algorithm allows us to find factorization of any number in the segment  \[2; n]  in the time of the size order of this factorization. 
+Moreover, using just one extra array will allow us to avoid divisions when looking for factorization.
+Knowing the factorizations of all numbers is very useful for some tasks, and this algorithm is one of the few which allow to find them in linear time.
+
+</More>

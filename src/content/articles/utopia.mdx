@@ -1,0 +1,50 @@
+---
+title: "Utopia: What it was meant to be"
+description: About the past, present and future of my real time collaborative editor
+layout: ../../layouts/Article.astro
+issue_number: 3
+---
+
+# {frontmatter.title}
+
+Utopia was to be a collaborative editor which would combine google docs with an local IDE.
+It should have had LSP support, Integrated VCS better than git, Low latency Websocket communications, Project Management and Admin support.
+It would have revolutionised pair programming where people could actually program together.
+
+Truly an Utopia.
+
+<More>
+
+6th Semester Software Engineering project: Utpoia
+
+Collaborative Development Environment where a remote server has a project root.
+All clients import the root into their own projects.
+Changes which they make will be moved to the staging area.
+Changes in the staging area will be reflected across all clients. 
+Any changes which raise conflicts between two clients need to be co-commited.
+Changes without conflicts can be commited.
+Changes can be cherry picked for testing locally. 
+This can also test integration with other features in development.
+Commited changes will update the project root at the server.
+All these can also be made on branches of the project root which can represent various functionality currently in development simultaneously.
+Branch rules can be added which govern how who can commit, CI which needs to pass, review required by senior devs.
+
+Truely an Utopia.
+
+Implemented a custom widget which structures the internal representation of document as a rope for increased performance compared to gap buffers.
+This rope is shared to the remote server through websockets. 
+The server shares it to all connected and registered clients who then through Myers String Diff (Git Diff algorithm) finds the changes, color codes them so that everyone knows who edited what.
+
+The sad state of websocket libraries for C++, leaves something to be desired.
+Recently [TSoding](https://www.youtube.com/watch?v=-PfG87485Po) wrote a websocket library for C3.
+But writing it from scratch seems very tantalizing for some reason.
+
+But sadly, because of placements an utopia was never meant to be. 
+As a random person once said, an excercise in uselessness, need not be useless. 
+The remnants of this project will always stay with me. 
+Ropes and Myers String Diff are some cool things which I would never have come across otherwise.
+The websocket implementation which I wrote might not be the best, but something I would do again if given the choice.
+
+Probably someday in the future, Utopia will come to be again.
+
+</More>
