@@ -1,0 +1,120 @@
+---
+title: "Remenants of the past: SQL vs NoSQL"
+description: An Introduction to the different types of SQL and NoSQL Databases.
+layout: ../../layouts/Article.astro
+issue_number: 3
+---
+
+# {frontmatter.title}
+
+Should have included in the previous issue but couldn't :(
+
+Relational databases are also called a relational database management system (RDBMS) or SQL database.
+The most popular ones are MySQL, Oracle database, PostgresSQL, etc. Relational databases represent and store data in tables and rows.
+You can perform join operations using SQL across different database tables.
+
+Non-Relational databases are also called NoSQL databases. Popular ones are [CouchDB](https://couchdb.apache.org/), [Neo4j](https://neo4j.com/),
+[Cassandra](https://cassandra.apache.org/_/index.html), [MongoDB](https://www.mongodb.com/), [Redis](https://redis.io/), etc. These databases are grouped into five categories:
+
++ Key-Value stores
++ Graph stores
++ Column stores
++ Document stores
++ Vector stores
+
+## The Problem
+
+The standard definition of NoSQL and SQL leaves much to be desired. The concept of relations and data which has no relations is not modeled accurately.
+
+<More>
+## Why NoSQL?
+
+For most developers, relational databases are the best option because they have been around for over 40 years and historically, they have worked well.
+However, if relational databases are not suitable for your specific use cases, it is critical to explore beyond relational databases.
+Non-relational databases might be the right choice if:
+
++ Your application requires super-low latency
++ Your data are unstructured, or you do not have any relational data (Images, Medical Scans, Binary data, etc.)
++ You only need to serialize and deserialize data (JSON, XML, YAML, etc.).
++ You need to store a massive amount of data
+
+Using traditional SQL based database systems is inefficient for these cases as:
+
++ It is difficult to store images, videos, audio etc
++ Indexing unstructured data is difficult
++ Performing crud is difficult because of the unclear structure
++ Storage costs compared to structured data
+
+## When to use What?
+
+It has to be noted that using NoSQL for small scale projects is usually very dumb, as perks of NoSQL is usually seen only at scale.
+
+### Key-Value stores
+
++ Generally no query language. 
++ Has a key and an associated value.
++ Works like a hashmap leading to faster lookup times.
+
+A popular key value store is Redis which stores data on the RAM while also storing it on the disk. 
+Snapshots and backups are also available to reconstruct the state of the database in the memory incase of a system failure.
+Storage of data on RAM leads to faster lookup times and can scale easily. 
+
+LiChess which is the 2nd most popular chess engine after chess.com, has only one core developer. 
+He uses Redis for handling the scale which is associated with number of games happening concurrently on the platform.
+
+### Document stores
+
++ Data stored in documents
++ Flexible: Not every document is required to have same schema
++ Query language is usually JSON and data models are usually in this query language 
++ Distributed and Resilient
++ Scale very well horizontally, whereas SQL databases are not suited for scaling in this fashion
++ Weak Atomicity and consistency checks
+
+CouchDB and MongoDB are popular Document stores which allow faster creation of documents.
+They offer distributed, fault tolerant solutions which make use of HTTP/JSON data format for ease of use and are complaint with load balancers and HTTP proxy servers.
+
+
+### Column stores
+
++ Has query languages similar SQL
++ Unlike SQL where data is read row wise, CS (Column stores) store data which is read by the column
+
+  This is beneficial when one wants to access some particular column only and has to disregard all other data.
+  This using a SQL database, is very inefficient as one has access all the rows, go to a particular column and extract the field required.
+  Using a Column store, it is reduced to accessing all the fields in the required column.
+
++ Better compression and flexibility
++ Aggregation queries are fast
++ Indexing is harder in Column stores so columns are separate from each other
+
+Cassandra is a popular Column stores where it is made of rings(clusters) of nodes where each node is of 2TB approx.
+Data is replicated across nodes in a ring and a keyspace is provided for the developer for accessing, configuring the database.
+It also provides a query language called CSQL which is a subset of SQL.
+
+### Graph stores
+
+Real world is not modeled as the JOIN of perfectly normalised SQL Tables. It is modelled as nodes or entities which have different relations with each other.
+
++ Solves Many to Many relationship problem
++ Relations are more important than data
++ Huge number of relations lead to performance issues with SQL databases. Graph stores handle querying a single relation extremely performant in comparision
+
+Property graph model which is the most common way of representing and creating graph stores. It was pioneered by Neo4j. 
+In this both entities and relationships can have properties which are key-value pairs which can be then queried for CRUD operations.
+
+Neo4j is the first ACID complaint graph database, which uses Property graph model all the way down to the storage level. 
+It uses a declarative language called CYPHER which looks like SQL for creating nodes, relationships and adding properties.
+
+### Vector stores
+
+A Vector Database, at its essence, is a relational database system specifically designed to process vectorized data. 
+Unlike conventional databases that contain information in tables, rows, and columns, vector databases work with vectors–arrays of numerical values that signify points in multidimensional space.
+
+Vectors, in turn, are everywhere and are commonly used in, for instance, machine learning, artificial intelligence, genomics, and geospatial analysis.
+At these datasets, there are frequently high-dimensional vectors where each dimension represents a particular attribute or feature.
+
+Such data place a heavy burden on traditional databases as they are tabular in form and do not allow efficiency in the storage and retrieval of such data and there comes the bottleneck in the performance of the database.
+Vector Databases is a type of database that are specialized for the storage and retrieval of vector data.
+
+</More>

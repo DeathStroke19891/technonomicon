@@ -3,7 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 
 const entries = await getCollection("issues")
-const entry = entries.sort().reverse()[0]
+const entry = entries.sort((a,b) => {return b.data.issue_number - a.data.issue_number;})[0]
 
 const issueSlug = `/issues/${entry.slug}`;
 const { Content, headings } = await entry.render();
