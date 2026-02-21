@@ -1,11 +1,11 @@
-{ pkgs ? import <nixpkgs> { } }:
-
+{pkgs ? import <nixpkgs> {}}:
 pkgs.mkShell
 {
   nativeBuildInputs = [
-    pkgs.nodejs_22
+    pkgs.nodejs_24
+    pkgs.pnpm
   ];
-  
+
   shellHook = ''
   '';
 }
